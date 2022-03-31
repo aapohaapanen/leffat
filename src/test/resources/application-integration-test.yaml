@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: leffat-test
+  datasource:
+    url: jdbc:h2:mem:leffatdb;MODE=PostgreSQL
