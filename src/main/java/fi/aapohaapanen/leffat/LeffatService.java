@@ -4,7 +4,6 @@ import fi.aapohaapanen.leffat.jpa.Genre;
 import fi.aapohaapanen.leffat.jpa.Movie;
 import fi.aapohaapanen.leffat.jpa.Person;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -32,6 +31,17 @@ public class LeffatService {
         var list = new ArrayList<Movie>();
         allMovies.forEach(list::add);
         return list;
+    }
+
+    public List<Movie> search(String term) {
+        var result = new ArrayList<Movie>();
+        var allMovies = leffatRepository.findAll();
+        allMovies.forEach((movie) -> {
+            if (movie.matches(term)) {
+                result.add(movie);
+            }
+        });
+        return result;
     }
 
     public List<Movie> addMovies(List<Movie> movies) {

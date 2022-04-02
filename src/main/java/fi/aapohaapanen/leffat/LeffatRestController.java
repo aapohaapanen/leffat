@@ -26,6 +26,11 @@ public class LeffatRestController {
         return leffat.allMovies();
     }
 
+    @GetMapping("/search/{term}")
+    public List<Movie> search(@PathVariable String term) {
+        return leffat.search(term);
+    }
+
     @PostMapping(path = "/addMovies", consumes = "application/json")
     public List<Movie> addMovies(@RequestBody List<Movie> movies) {
         return leffat.addMovies(movies);

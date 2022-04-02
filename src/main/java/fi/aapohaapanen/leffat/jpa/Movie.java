@@ -1,6 +1,7 @@
 package fi.aapohaapanen.leffat.jpa;
 
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -45,5 +46,14 @@ public class Movie {
     @Override
     public int hashCode() {
         return Objects.hashCode(id);
+    }
+
+    public boolean matches(String searchTerm) {
+        return StringUtils.containsIgnoreCase(name, searchTerm)
+                || StringUtils.containsIgnoreCase(year.toString(), searchTerm)
+                || StringUtils.containsIgnoreCase(synopsis, searchTerm)
+                || director.matches(searchTerm)
+                || genres.stream().anyMatch(g -> g.matches(searchTerm))
+                || actors.stream().anyMatch(a -> a.matches(searchTerm));
     }
 }

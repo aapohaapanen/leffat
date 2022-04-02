@@ -2,6 +2,7 @@ package fi.aapohaapanen.leffat.jpa;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -36,5 +37,10 @@ public class Person {
     @Override
     public int hashCode() {
         return Objects.hashCode(id);
+    }
+
+    public boolean matches(String searchTerm) {
+        return StringUtils.containsIgnoreCase(firstName, searchTerm)
+                || StringUtils.containsIgnoreCase(lastName.toString(), searchTerm);
     }
 }

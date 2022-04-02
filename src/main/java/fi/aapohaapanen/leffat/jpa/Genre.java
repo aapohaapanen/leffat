@@ -3,6 +3,7 @@ package fi.aapohaapanen.leffat.jpa;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -36,5 +37,9 @@ public class Genre {
     @Override
     public int hashCode() {
         return Objects.hashCode(name);
+    }
+
+    public boolean matches(String searchTerm) {
+        return StringUtils.containsIgnoreCase(name, searchTerm);
     }
 }
