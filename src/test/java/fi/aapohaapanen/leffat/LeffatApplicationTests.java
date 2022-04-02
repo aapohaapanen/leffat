@@ -10,9 +10,11 @@ import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.util.UUID;
+import java.util.stream.Stream;
+
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("integration-test")
@@ -63,6 +65,27 @@ class LeffatApplicationTests {
 		var movie = result.getBody();
 		assertNotNull(movie);
 		assertEquals("Avengers: Endgame", result.getBody().getName());
+	}
+
+	@Test void addAndDeleteMovie() {
+		var request = RequestEntity.post(url("/addMovie"))
+				.contentType(MediaType.APPLICATION_JSON)
+				.body(movieJson);
+		var result = rest.exchange(request, Movie.class);
+		var movie = result.getBody();
+		assertNotNull(movie);
+		var id = result.getBody().getId();
+
+		assertTrue(moviesContains(id));
+
+		var deleteUrl = url("/delete/" + id.toString());
+		rest.delete(deleteUrl);
+		assertFalse(moviesContains(id));
+	}
+
+	private boolean moviesContains(UUID id) {
+		var allMovies = rest.getForObject(url("/allMovies"), Movie[].class);
+		return Stream.of(allMovies).anyMatch(m -> m.getId().equals(id));
 	}
 
 	private String url(String path) {

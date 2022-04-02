@@ -4,12 +4,14 @@ import fi.aapohaapanen.leffat.jpa.Genre;
 import fi.aapohaapanen.leffat.jpa.Movie;
 import fi.aapohaapanen.leffat.jpa.Person;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -37,7 +39,7 @@ public class LeffatService {
                 .map(this::addMovie)
                 .toList();
     }
-    
+
     public Movie addMovie(Movie movie) {
         var toPersist = new Movie();
         toPersist.setName(movie.getName());
@@ -63,6 +65,10 @@ public class LeffatService {
         toPersist.setDirector(director);
 
         return leffatRepository.save(toPersist);
+    }
+
+    public void deleteMovie(UUID id) {
+        leffatRepository.deleteById(id);
     }
 
     private Genre findOrCreate(Genre in) {

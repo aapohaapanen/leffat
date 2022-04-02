@@ -2,12 +2,13 @@ package fi.aapohaapanen.leffat;
 
 import fi.aapohaapanen.leffat.jpa.Movie;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 public class LeffatRestController {
@@ -33,5 +34,14 @@ public class LeffatRestController {
     @PostMapping(path = "/addMovie", consumes = "application/json")
     public Movie addMovie(@RequestBody Movie movie) {
         return leffat.addMovie(movie);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public void deleteMovie(@PathVariable UUID id) {
+        try {
+            leffat.deleteMovie(id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Movie with id " + id + " not found.");
+        }
     }
 }
