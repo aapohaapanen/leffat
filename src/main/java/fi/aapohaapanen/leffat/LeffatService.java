@@ -32,6 +32,12 @@ public class LeffatService {
         return list;
     }
 
+    public List<Movie> addMovies(List<Movie> movies) {
+        return movies.stream()
+                .map(this::addMovie)
+                .toList();
+    }
+    
     public Movie addMovie(Movie movie) {
         var toPersist = new Movie();
         toPersist.setName(movie.getName());
